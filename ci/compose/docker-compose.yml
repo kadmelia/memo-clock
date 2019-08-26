@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  php:
+    build:
+      context: php
+    volumes:
+      - '../../back:/var/www/symfony'
+    depends_on:
+      - db
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "./.data/db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: gnutgnut
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - '../../back:/var/www/symfony'
+      - './nginx/symfony.conf:/etc/nginx/conf.d/symfony.conf'
+      - './data/logs/nginx/:/var/log/nginx'
