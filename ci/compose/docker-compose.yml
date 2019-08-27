@@ -21,5 +21,6 @@ services:
       - 80:80
     volumes:
       - '../../back:/var/www/symfony'
+      - '../../front/public:/var/www/front'
       - './nginx/symfony.conf:/etc/nginx/conf.d/symfony.conf'
       - './data/logs/nginx/:/var/log/nginx'
