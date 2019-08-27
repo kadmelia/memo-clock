@@ -1,0 +1,33 @@
+$main-color : #3eb959;
+$card-width : 100;
+$card-count : 14;
+$card-margin : 5;
+
+
+.canvas {
+  max-width: ($card-width + $card-margin * 2) * $card-count / 2 + $card-margin + 0px;
+  margin: auto;
+  background-color: #b8b8b8;
+  font-size: 0;
+  text-align: center;
+  padding: #{$card-margin}px;
+
+  .card {
+    background-image: url('images/cards.png');
+    width: #{$card-width}px;
+    height: #{$card-width}px;
+    display: inline-block;
+    margin: #{$card-margin}px;
+
+    &.masked {
+      background-image: none;
+      background-color: grey;
+    }
+  }
+
+  @for $i from 0 through $card-count {
+    .card[data-card="#{$i}"] {
+        background-position-y: $card-width * $i + 0px;
+    }
+  }
+}
