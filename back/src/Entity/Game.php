@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\{ApiResource, ApiFilter};
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GameRepository")
+ * @ApiFilter(OrderFilter::class, properties={"time"}, arguments={"orderParameterName"="order"})
  * @ApiResource
  */
 class Game
