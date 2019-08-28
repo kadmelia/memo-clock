@@ -5,7 +5,30 @@
     <title>Memo'clock</title>
 </head>
 <body>
-    <div class="canvas"></div>
+    <div class="main-container">
+        <div class="canvas"></div>
+        <div class="result">
+            <div class="victory announce">
+                Victoire en <span class="victory-time"></span> secondes :-)
+            </div>
+            <div class="fail announce">
+                Défaite :/
+            </div>
+        </div>
+        <div class="controls">
+            <div class="progress">
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="play">Jouer</button>
+                <button class="retry masked">Retenter</button>
+            </div>
+        </div>
+        <div class="scores"></div>
+    </div>
 </body>
 <script src="bundle.js"></script>
 
