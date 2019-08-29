@@ -1,0 +1,22 @@
+version: '3.1'
+
+services:
+  php:
+    image: registry.gitlab.com/kadmelia/memo-clock/php:latest 
+    volumes:
+      - '../../back:/var/www/symfony'
+    depends_on:
+      - db
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "./.data/db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: gnutgnut
+  nginx:
+    image: registry.gitlab.com/kadmelia/memo-clock/nginx:latest 
+    ports:
+      - 80:80
+    depends_on:
+      - php
