@@ -11,17 +11,10 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
 
-before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  - eval $(ssh-agent -s)
-  - ssh-add <(echo "$MEMO_SSH_KEY")
-  - mkdir -p ~/.ssh
-  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    
-
 build:
   stage: build
   script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - cp back/.env back/.env.local
     - cp front/src/environment.js.dist front/src/environment.js
     - sed -i s/%%MEMO_BACK_URL%%/"$MEMO_BACK_URL"/g front/src/environment.js
@@ -42,6 +35,15 @@ build:
 
 deploy:
   stage: deploy
+  image: ubuntu
   script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan "$MEMO_BACK_URL" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - scp ci/deploy/docker-compose.yml "$MEMO_SSH_USER"@"$MEMO_BACK_URL":$MEMO_SSH_DIR/docker-compose.yml
     - ssh "$MEMO_SSH_USER"@"$MEMO_BACK_URL" "cd $MEMO_SSH_DIR && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY && docker-compose pull && docker-compose up -d "
