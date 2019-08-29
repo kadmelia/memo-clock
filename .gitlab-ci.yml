@@ -47,3 +47,4 @@ deploy:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - scp ci/deploy/docker-compose.yml "$MEMO_SSH_USER"@"$MEMO_BACK_URL":$MEMO_SSH_DIR/docker-compose.yml
     - ssh "$MEMO_SSH_USER"@"$MEMO_BACK_URL" "cd $MEMO_SSH_DIR && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY && docker-compose pull && docker-compose up -d "
+    - ssh -tt "$MEMO_SSH_USER"@"$MEMO_BACK_URL" "cd $MEMO_SSH_DIR && docker-compose exec php bash -c \"php bin/console doctrine:database:create --no-interaction --if-not-exists && php bin/console doctrine:migrations:migrate --no-interaction && php bin/console c:c\""
