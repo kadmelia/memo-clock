@@ -1,7 +1,7 @@
 FROM node:latest
 COPY front /var/www/front
 WORKDIR /var/www/front
-RUN npm install
+RUN npm install && npm run build
 
 FROM nginx
 
