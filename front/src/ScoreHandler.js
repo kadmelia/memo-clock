@@ -1,4 +1,5 @@
 import axios from 'axios';
+import env from './environment.js';
 
 class ScoreHandler {
 
@@ -15,11 +16,18 @@ class ScoreHandler {
     scores;
 
     /**
+     * API url;
+     * @var string
+     */
+    apiUrl;
+
+    /**
      * 
      * @param {Element} scoresElement 
      */
     constructor(scoresElement) {
         this.scoresElement = scoresElement;
+        this.apiUrl = 'http://'+ env.url;
     }
 
     /**
@@ -30,7 +38,7 @@ class ScoreHandler {
         const date = new Date();
         axios({
             method: 'post',
-            url: 'http://api.memo.olivierbarou.fr/api/games',
+            url: this.apiUrl + '/api/games',
             data: {
                 time: score,
                 moment: date.toISOString(),
@@ -46,7 +54,7 @@ class ScoreHandler {
     getHighScores() {
         axios({
             method: 'get',
-            url: 'http://api.memo.olivierbarou.fr/api/games?page=1&order%5Btime%5D=asc',
+            url: this.apiUrl + '/api/games?page=1&order%5Btime%5D=asc',
         }).then(response => {
             console.log(response);
             this.scores = response.data['hydra:member'];

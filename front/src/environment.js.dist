@@ -1,0 +1,5 @@
+const environment = {
+    url: 'api.memo.olivierbarou.fr'
+};
+
+export default environment;
