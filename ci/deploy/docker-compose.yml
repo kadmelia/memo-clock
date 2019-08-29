@@ -3,8 +3,6 @@ version: '3.1'
 services:
   php:
     image: registry.gitlab.com/kadmelia/memo-clock/php:latest 
-    volumes:
-      - '../../back:/var/www/symfony'
     depends_on:
       - db
   db:
