@@ -19,10 +19,13 @@ build:
     - cp back/.env back/.env.local
     - cp front/src/environment.js.dist front/src/environment.js
     - sed -i s/%%MEMO_BACK_URL%%/"$MEMO_BACK_URL"/g front/src/environment.js
-    - sed -i s/%%MEMO_FRONT_URL%%/"$MEMO_FRONT_URL"/g back/.env.local
     - sed -i s/%%MEMO_DB_URL%%/"$MEMO_DB_URL"/g ci/deploy/nginx/symfony.conf
     - sed -i s/%%MEMO_BACK_URL%%/"$MEMO_BACK_URL"/g front/src/environment.js
     - sed -i s/%%MEMO_FRONT_URL%%/"$MEMO_FRONT_URL"/g back/.env.local
+    - sed -i s/%%MEMO_DB_USER%%/"$MEMO_DB_USER"/g back/.env.local
+    - sed -i s/%%MEMO_DB_PASSWORD%%/"$MEMO_DB_PASSWORD"/g back/.env.local
+    - sed -i s/%%MEMO_DB_HOST%%/"$MEMO_DB_HOST"/g back/.env.local
+    - sed -i s/%%MEMO_DB_DB%%/"$MEMO_DB_DB"/g back/.env.local
     - mv front ci/deploy/dockerfiles/nginx/front
     - mv back ci/deploy/dockerfiles/nginx/back
     - docker build  -t registry.gitlab.com/kadmelia/memo-clock/nginx:latest ci/deploy/dockerfiles/nginx
