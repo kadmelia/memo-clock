@@ -30,5 +30,6 @@ build:
     - mv back ci/deploy/dockerfiles/nginx/back
     - docker build  -t registry.gitlab.com/kadmelia/memo-clock/nginx:latest ci/deploy/dockerfiles/nginx
     - docker push registry.gitlab.com/kadmelia/memo-clock/nginx:latest
+    - mv ci/deploy/dockerfiles/nginx/back ci/deploy/dockerfiles/php/back
     - docker build  -t registry.gitlab.com/kadmelia/memo-clock/php:latest ci/deploy/dockerfiles/php
     - docker push registry.gitlab.com/kadmelia/memo-clock/php:latest
