@@ -38,6 +38,14 @@ Il permet de déclancher 2 pipelines sur Gitlab :
     - Récupérer les containers construits sur Gitlab
     - Démarrer tous ce petit monde.
 
+### Environement de developpement
+
+Un environement de développement a été mis en place, basé sur docker compose [voir les sources](ci/compose/docker-compose.yml)
+
+Il permet de simplement lancer les containers (nginx, php & mysql),
+les sources vont être _montées_ dans ces derniers, et d'avoir un environement
+prêt à l'emploi en quelques minutes sans rien installer sur sa machine.
+
 ## Limitation
 
 ### Sécu-quoi ?
