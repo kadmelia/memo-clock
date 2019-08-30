@@ -25,7 +25,7 @@ API-plateform.
 Et c'est tout ! API plateform s'occupe pour nous de générer l'API REST
 et la gestion des requetes en fonction des verbes HTTP, et couplé à Doctrine, de gérer la persistance des données.
 
-### Déploiment
+### Déploiement
 
 Un  script de déploiement automatisé a été mis en place. [voir les sources](.gitlab-ci.yml).
 Il permet de déclancher 2 pipelines sur Gitlab :
