@@ -14,9 +14,12 @@ variables:
 build:
   stage: build
   script:
+    # Log to container registry user CI credentials.
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # Generates configurations/environment files
     - cp back/.env back/.env.local
     - cp front/src/environment.js.dist front/src/environment.js
+    # Replace variable, secretly stored in Gitlab, in configuration files
     - sed -i s/%%MEMO_BACK_URL%%/"$MEMO_BACK_URL"/g front/src/environment.js
     - sed -i s/%%MEMO_FRONT_URL%%/"$MEMO_FRONT_URL"/g ci/deploy/dockerfiles/nginx/symfony.conf
     - sed -i s/%%MEMO_BACK_URL%%/"$MEMO_BACK_URL"/g ci/deploy/dockerfiles/nginx/symfony.conf
@@ -25,8 +28,10 @@ build:
     - sed -i s/%%MEMO_DB_PASSWORD%%/"$MEMO_DB_PASSWORD"/g back/.env.local
     - sed -i s/%%MEMO_DB_HOST%%/"$MEMO_DB_HOST"/g back/.env.local
     - sed -i s/%%MEMO_DB_DB%%/"$MEMO_DB_DB"/g back/.env.local
+    # Move source to Dockerfile level
     - mv front ci/deploy/dockerfiles/nginx/front
     - mv back ci/deploy/dockerfiles/nginx/back
+    # Actually build containers and push them
     - docker build  -t registry.gitlab.com/kadmelia/memo-clock/nginx:latest ci/deploy/dockerfiles/nginx
     - docker push registry.gitlab.com/kadmelia/memo-clock/nginx:latest
     - mv ci/deploy/dockerfiles/nginx/back ci/deploy/dockerfiles/php/back
@@ -35,16 +40,23 @@ build:
 
 deploy:
   stage: deploy
+  # We switch to an other image which allows us to install an SSH client
   image: ubuntu
   script:
+    # Check if ssh agent is available, if not install it
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
+    # Get private ssh key store in gitlab secret variables and add it to current session
     - echo "$MEMO_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan "$MEMO_BACK_URL" >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    # Copy docker file to remote serveur
     - scp ci/deploy/docker-compose.yml "$MEMO_SSH_USER"@"$MEMO_BACK_URL":$MEMO_SSH_DIR/docker-compose.yml
+    # Connect to the serveur and pull images and run them
     - ssh "$MEMO_SSH_USER"@"$MEMO_BACK_URL" "cd $MEMO_SSH_DIR && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY && docker-compose pull && docker-compose up -d "
+    # Lanch some operation on the DB, like creation, or data/structure migration
+    # /!\ Drawback : if DB container wasn't already started, it may take some time and having the following line to fail.
     - ssh -tt "$MEMO_SSH_USER"@"$MEMO_BACK_URL" "cd $MEMO_SSH_DIR && docker-compose exec php bash -c \"php bin/console doctrine:database:create --no-interaction --if-not-exists && php bin/console doctrine:migrations:migrate --no-interaction && php bin/console c:c\""
