@@ -28,22 +28,22 @@ et la gestion des requetes en fonction des verbes HTTP, et couplé à Doctrine, 
 ### Déploiement
 
 Un  script de déploiement automatisé a été mis en place. [voir les sources](.gitlab-ci.yml).
-Il permet de déclancher 2 pipelines sur Gitlab :
+Il permet de déclencher 2 pipelines sur Gitlab :
 
 - Une qui va construire 2 containers docker contenant les sources compilées
-    - Un container de front (nginx essentielement) [voir les sources](ci/deploy/dockerfiles/nginx/Dockerfile)
-    - Un container de pour le back (php-fpm essentielement) [voir les sources](ci/deploy/dockerfiles/php/Dockerfile)
+    - Un container de front (nginx essentiellement) [voir les sources](ci/deploy/dockerfiles/nginx/Dockerfile)
+    - Un container de pour le back (php-fpm essentiellement) [voir les sources](ci/deploy/dockerfiles/php/Dockerfile)
 - Une qui va se connecter sur un serveur dédié en SSH pour
     - Y copier un fichier docker-compose [voir les sources](ci/deploy/docker-compose.yml)
     - Récupérer les containers construits sur Gitlab
-    - Démarrer tous ce petit monde.
+    - Démarrer tout ce petit monde.
 
 ### Environement de developpement
 
-Un environement de développement a été mis en place, basé sur docker compose [voir les sources](ci/compose/docker-compose.yml)
+Un Environnement de développement a été mis en place, basé sur docker compose [voir les sources](ci/compose/docker-compose.yml)
 
 Il permet de simplement lancer les containers (nginx, php & mysql),
-les sources vont être _montées_ dans ces derniers, et d'avoir un environement
+les sources vont être _montées_ dans ces derniers, et d'avoir un Environnement
 prêt à l'emploi en quelques minutes sans rien installer sur sa machine.
 
 ## Limitation
