@@ -10,7 +10,7 @@ base de données via un backend PHP.
 ### Front
 
 - Le front à été codé en JS (ES6) [voir les sources](front/src)
-- Le style a été réalisé en SCSS [voir les sources](front/assets/styles.scss)
+- Le style a été réalisé en SCSS [voir les sources](front/assets/styles/styles.scss)
 - Le JS est transpilé en ES2015, et le SCSS compilé, via Webpack [voir les sources](front/webpack.config.js).
 
 
